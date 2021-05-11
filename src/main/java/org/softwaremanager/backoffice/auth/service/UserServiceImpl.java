@@ -3,6 +3,7 @@ package org.softwaremanager.backoffice.auth.service;
 import org.softwaremanager.backoffice.auth.domain.Role;
 import org.softwaremanager.backoffice.auth.domain.User;
 import org.softwaremanager.backoffice.auth.repository.UserRepository;
+import org.softwaremanager.backoffice.auth.web.dto.UserInfoDto;
 import org.softwaremanager.backoffice.auth.web.dto.UserRegistrationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,6 +37,22 @@ public class UserServiceImpl implements UserService{
                 passwordEncoder.encode(registrationDto.getPassword()), Arrays.asList(new Role("ROLE_USER")));
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public UserInfoDto findByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+
+        if(user == null) {
+            throw new UsernameNotFoundException("Invalid username or password.");
+        }else{
+            UserInfoDto userinfo = new UserInfoDto();
+            userinfo.setId(user.getId());
+            userinfo.setFirstName(user.getFirstName());
+            userinfo.setLastName(user.getLastName());
+            userinfo.setEmail(user.getEmail());
+            return userinfo;
+        }
     }
 
     @Override

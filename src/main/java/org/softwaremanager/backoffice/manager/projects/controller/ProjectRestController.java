@@ -1,9 +1,16 @@
 package org.softwaremanager.backoffice.manager.projects.controller;
 
+import org.softwaremanager.backoffice.component.Paginate;
 import org.softwaremanager.backoffice.manager.projects.domain.Project;
 import org.softwaremanager.backoffice.manager.projects.repository.ProjectRepository;
+import org.softwaremanager.backoffice.manager.tasks.domain.dto.TaskDto;
+import org.softwaremanager.backoffice.manager.tasks.service.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,31 +19,59 @@ import java.util.List;
 @RequestMapping("api/v1/projects")
 public class ProjectRestController {
 
-    ProjectRepository repository;
+    final ProjectRepository repository;
+    @Autowired
+    TaskService taskService;
 
     public ProjectRestController(ProjectRepository repository) {
         this.repository = repository;
+        this.taskService = taskService;
     }
 
     @GetMapping
-    public List<Project> showProjects(@RequestParam(required = false, name = "p") Integer p){
-        int page = p == null || p<1 ? 0 : p,
-                 size = 15;
+    public ResponseEntity< List<Project> > showProjects(@RequestParam(required = false, name = "p") Integer p){
 
-        PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Project> pageProject = repository.findAll(pageRequest);
+        int page = p == null || p<0 ? 0 : p;
+        int size = 15;
 
-        return pageProject.getContent();
+        PageRequest pageRequest = new Paginate().
+                page(page).
+                size(size).
+                sortBy("id").
+                descending().
+                build();
+
+        Page<Project> pageProject = repository.findAll( pageRequest );
+        return ResponseEntity.ok( pageProject.getContent() );
     }
 
     @GetMapping("/{id}")
-    public Project showProjectById(@PathVariable("id") Long id){
+    public ResponseEntity<Project> showProjectById(@PathVariable("id") Long id){
         if(repository.findById(id).isPresent()){
-            return repository.findById(id).get();
+            return ResponseEntity.ok( repository.findById(id).get() );
         }else{
-            return null;
+            return ResponseEntity.notFound().build();
         }
     }
 
+
+    @GetMapping("/{id}/tasks")
+    public ResponseEntity<List<TaskDto>> showTasksById(@RequestParam(required = false, name = "p") Integer p,
+                                                       @PathVariable("id") Long id ){
+
+        Project project = repository.findById(id).get();
+
+        int page = p == null || p<0 ? 0 : p;
+        int size = 20;
+
+        Pageable pageRequest = PageRequest.of( page, size, Sort.by("id").descending());
+
+        List<TaskDto> taskDtoList =  taskService.findByProjectDto(project, pageRequest);
+        if(taskDtoList !=null){
+            return ResponseEntity.ok( taskDtoList);
+        }else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }

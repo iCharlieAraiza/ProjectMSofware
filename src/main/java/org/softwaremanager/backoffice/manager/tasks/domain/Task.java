@@ -1,6 +1,7 @@
 package org.softwaremanager.backoffice.manager.tasks.domain;
 
 import lombok.Data;
+import org.softwaremanager.backoffice.auth.domain.User;
 import org.softwaremanager.backoffice.manager.projects.domain.Project;
 
 import javax.persistence.*;
@@ -23,6 +24,10 @@ public class Task {
     private Date startDate;
     @Temporal(TemporalType.TIME)
     private Date finishDate;
+
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "project_id")
