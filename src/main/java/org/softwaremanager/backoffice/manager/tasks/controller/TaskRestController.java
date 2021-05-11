@@ -1,27 +1,45 @@
 package org.softwaremanager.backoffice.manager.tasks.controller;
 
 import org.softwaremanager.backoffice.component.Paginate;
-import org.softwaremanager.backoffice.manager.tasks.domain.Task;
+import org.softwaremanager.backoffice.manager.tasks.domain.dto.TaskDto;
 import org.softwaremanager.backoffice.manager.tasks.repository.TaskRepository;
+import org.softwaremanager.backoffice.manager.tasks.service.TaskService;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/tasks")
 public class TaskRestController {
-    private TaskRepository repository;
+    final private TaskRepository repository;
+    final private TaskService service;
+
+    final int SIZE = 15;
+
+    public TaskRestController(TaskRepository repository, TaskService service) {
+        this.repository = repository;
+        this.service = service;
+    }
 
     @GetMapping
-    public ResponseEntity<List<Task>> showTasks(@RequestParam(required = false, name = "p") Integer p){
+    public ResponseEntity<List<TaskDto>> showTasks(@RequestParam(required = false, name = "p") Integer p){
         int page = p == null ? 0 : p;
-        List taks = new Paginate().page(page).size(15).sortBy("id").descending().get(repository).findAll();
-
-        return taks == null ? ResponseEntity.notFound().build() : ResponseEntity.ok( taks );
+        PageRequest pageRequest = new Paginate().page(page).size(SIZE).sortBy("id").descending().build();
+        List<TaskDto> taskDtoList = service.findAll(pageRequest);
+        return taskDtoList == null ? ResponseEntity.notFound().build() : ResponseEntity.ok( taskDtoList );
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TaskDto> showTask( @PathVariable("id") Long id ){
+        TaskDto taskDto = service.findById(id);
+        if(taskDto==null){
+            return ResponseEntity.notFound().build();
+        }else{
+            return ResponseEntity.ok(taskDto);
+        }
+    }
+
 
 }

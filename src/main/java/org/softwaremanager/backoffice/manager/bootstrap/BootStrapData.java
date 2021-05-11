@@ -7,6 +7,7 @@ import org.softwaremanager.backoffice.auth.service.UserServiceImpl;
 import org.softwaremanager.backoffice.manager.projects.repository.ProjectRepository;
 import org.softwaremanager.backoffice.manager.tasks.repository.TaskRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
