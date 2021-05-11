@@ -80,13 +80,11 @@ public class ProjectRestController {
 
 
     @GetMapping("/{id}/tasks")
-    public ResponseEntity<List<TaskDto>> showTasksById(
-            @RequestParam(required = false, name = "p") Integer p,
-            @PathVariable("id") Long id ){
-
-        if(repository.findById(id).isEmpty()){
+    public ResponseEntity<List<TaskDto>> showTasksById( @RequestParam(required = false, name = "p") Integer p,
+                                                                        @PathVariable("id") Long id ){
+        if(repository.findById(id).isEmpty())
             return ResponseEntity.notFound().build();
-        }
+
 
         int page = p == null || p<0 ? 0 : p;
         Project project = repository.findById(id).get();
@@ -94,12 +92,22 @@ public class ProjectRestController {
         Pageable pageRequest = PageRequest.of( page, SIZE, Sort.by("id").descending());
         List<TaskDto> taskDtoList =  taskService.findByProjectDto(project, pageRequest);
 
-        if(taskDtoList !=null){
+        if(taskDtoList !=null)
             return ResponseEntity.ok( taskDtoList);
-        }else {
+        else
             return ResponseEntity.notFound().build();
-        }
     }
+
+    @CrossOrigin
+    @PostMapping("/{id}/tasks")
+    public ResponseEntity<TaskDto> saveTask(@PathVariable("id") Long id, @RequestBody TaskDto taskDto){
+
+        Project project = repository.findById(id).get();
+        TaskDto newTask = taskService.save(taskDto, project);
+        return ResponseEntity.ok(newTask);
+    }
+
+
 
     @GetMapping("/{id}/bugs")
     public ResponseEntity<List<Bug>> showBugsByProject(@RequestParam(required = false, name = "p") Integer p,

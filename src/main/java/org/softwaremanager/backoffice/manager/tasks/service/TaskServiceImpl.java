@@ -2,10 +2,10 @@ package org.softwaremanager.backoffice.manager.tasks.service;
 
 import org.softwaremanager.backoffice.auth.service.UserService;
 import org.softwaremanager.backoffice.manager.projects.domain.Project;
+import org.softwaremanager.backoffice.manager.projects.repository.ProjectRepository;
 import org.softwaremanager.backoffice.manager.tasks.domain.Task;
 import org.softwaremanager.backoffice.manager.tasks.domain.dto.TaskDto;
 import org.softwaremanager.backoffice.manager.tasks.repository.TaskRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +17,34 @@ import java.util.Optional;
 public class TaskServiceImpl implements TaskService {
     final TaskRepository repository;
     final UserService userService;
+    final ProjectRepository projectRepository;
 
-    public TaskServiceImpl(TaskRepository repository, UserService userService) {
+    public TaskServiceImpl(TaskRepository repository, UserService userService, ProjectRepository projectRepository) {
         this.repository = repository;
         this.userService = userService;
+        this.projectRepository = projectRepository;
     }
+
+    @Override
+    public TaskDto save(TaskDto taskDto) {
+        Task newTask = new Task(taskDto);
+        newTask.setProject( projectRepository.findById( taskDto.getProject().getId() ).get() );
+        newTask.setUser(userService.findUserByEmail( taskDto.getUserInfoDto().getEmail()) );
+        Task taskResponse = repository.save(newTask);
+        taskDto.setId( taskResponse.getId() );
+
+        return taskDto;
+    }
+
+    @Override
+    public TaskDto save(TaskDto taskDto, Project project) {
+        Task newTask = new Task(taskDto);
+        newTask.setProject( project );
+        newTask.setUser(userService.findUserByEmail( taskDto.getUserInfoDto().getEmail()) );
+        repository.save(newTask);
+        return taskDto;
+    }
+
 
     @Override
     public TaskDto findById(Long id) {

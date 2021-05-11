@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,15 +45,15 @@
     </div>
     <div class="menu">
         <ul class="module">
-            <li><a th:href="@{/}" class="active">Proyectos</a></li>
-            <li><a th:href="@{/tasks}">Tareas</a></li>
+            <li><a href="/" class="active">Proyectos</a></li>
+            <li><a href="/tasks">Tareas</a></li>
             <li><a href="http://">Bugs</a></li>
         </ul>
     </div>
     <div class="login-section">
         <ul>
             <li><a href="http://" class="language"><i class="fas fa-globe-americas"></i> ES</a></li>
-            <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}"> <i class="fas fa-user"></i> Cerrar sesión</a> </li>
+            <li sec:authorize="isAuthenticated()"><a href="/logout"> <i class="fas fa-user"></i> Cerrar sesión</a> </li>
         </ul>
     </div>
 </nav>
@@ -71,10 +72,10 @@
         </header>
         <!---Finish - Header component -->
         <div class="task-container-form">
-            <form action="#" th:action="@{/tasks/saveTask}" th:object="${task}" method="POST" class="row">
-                <input type="hidden" th:field="*{id}" th:value="${task.id}" />
+            <div class="row"><input type="hidden" name="_csrf" value="b8ace9df-2217-460a-8fdf-1af9421d22ea"/>
+                <input type="hidden" value="" id="id" name="id" />
 
-                <div class="form-container form-container-inside form-task-container">
+                <div class="form-container form-container-inside">
                     <div class="title-form">
                         <img src="http://127.0.0.1:5502/img/infoicon.png" alt="" style="margin-right: 1rem">
                         <h2 style="margin-right: auto;">Información básica</h2>
@@ -83,7 +84,7 @@
                     <div class="form-group">
                         <label for="">Nombre de la tarea <span style="color: red;">*</span></label>
                         <div class="form-control">
-                            <input type="text" class="form-control" th:field="*{name}" placeholder="Nombre de la tarea">
+                            <input type="text" class="form-control" placeholder="Nombre de la tarea" id="name" name="name" value="">
                         </div>
                     </div>
 
@@ -92,10 +93,12 @@
                         <div class="form-group col-lg-6 horizontal">
                             <label for="">Proyecto</label>
                             <div class="form-control select-form">
-                                <select th:field="*{project}" required>
-                                    <th:block th:each="pro : ${projects}">
-                                        <option th:text="${pro.name}" th:value="${pro.id}"/>
-                                    </th:block>
+                                <select required id="project" name="project">
+
+                                    <option value="1">Proyecto de gestión de software</option>
+
+                                    <option value="2">Hacer lo de Aeroibero</option>
+
                                 </select>
                                 <i class="fas fa-sort-down"></i>
                             </div>
@@ -121,7 +124,7 @@
                         <div class="form-group col-lg-6 horizontal">
                             <label for="">Prioridad</label>
                             <div class="form-control select-form">
-                                <select  th:field="*{priority}">
+                                <select id="priority" name="priority">
                                     <option value="LOW">Normal</option>
                                     <option value="MEDIUM">Media</option>
                                     <option value="HIGH">Alta</option>
@@ -130,29 +133,123 @@
                             </div>
                         </div>
 
-                        <div class="form-group col-lg-6 horizontal">
-                            <label for="">Minutos estimados</label>
-                            <div class="form-control">
-                                <input type="number" name="planTime" id="planTime" min="1" th:field="*{planTime}">
-                            </div>
-                        </div>
-
                     </div>
 
                     <div class="form-group">
                         <label for="" style="margin-top: -5px;">Descripción</label>
                         <div class="form-control">
-                            <textarea id="" cols="30" rows="10" th:field="*{description}"></textarea>
+                            <textarea id="description" cols="30" rows="10" name="description"></textarea>
                         </div>
                     </div>
                 </div>
-        <div class="btn-section-task">
-            <input type="submit" class="btn main-btn" value="Crear">
+                <div class="btn-section-task">
+                    <input type="submit" class="btn main-btn" id="send" value="Crear">
+                </div>
+            </div>
         </div>
-        </form>
-    </div>
 </main>
 
+<script>
+
+    fetch('http://localhost:8080/api/v1/tasks/create')
+        .then(response => response.json())
+        .then(data => {
+            const sendBtn = document.getElementById('send')
+
+            sendBtn.onclick = ()=>{
+                console.log(data)
+                const taskData = {...data};
+                sendPost(taskData);
+
+            }
+        });
+
+
+    const sendPost = (data) =>{
+        const name = document.getElementById('name').value;
+        const description = document.getElementById('description').value;
+        const project = document.getElementById('project').value;
+        const priority = document.getElementById('priority').value;
+
+        data.name = name;
+        data.description = description;
+        data.project = {id:project}
+        data.priority = priority;
+
+        console.log(data);
+
+        var url = 'http://localhost:8080/api/v1/projects/1/tasks';
+
+        fetch(url, {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers:{
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json())
+            .catch(error => console.error('Error:', error))
+            .then(response => console.log('Success:', response));
+    }
+
+        /*
+        var url = 'http://localhost:8080/api/v1/tasks';
+
+        fetch(url, {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers:{
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json())
+            .catch(error => console.error('Error:', error))
+            .then(response => console.log('Success:', response));
+
+    }
+    */
+
+
+    /*
+    let task = {};
+    const sendBtn = document.getElementById('send');
+    sendBtn.onclick = ()=>{
+
+        const name = document.getElementById('name').value;
+        const description = document.getElementById('description').value;
+        const project = document.getElementById('project').value;
+        const priority = document.getElementById('priority').value;
+
+        task = {
+            name,
+            description,
+            priority,
+            planTime: 20,
+            project:{
+                id: project
+            },
+            userInfoDto: {
+                "id": 1,
+            }
+        }
+
+        var url = 'http://localhost:8080/api/v1/tasks';
+        var data = task;
+
+        fetch(url, {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(data), // data can be `string` or {object}!
+            headers:{
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json())
+            .catch(error => console.error('Error:', error))
+            .then(response => console.log('Success:', response));
+
+    }
+
+    */
+
+
+</script>
 
 </body>
 </html>

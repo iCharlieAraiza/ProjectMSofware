@@ -3,6 +3,7 @@ package org.softwaremanager.backoffice.manager.tasks.domain;
 import lombok.Data;
 import org.softwaremanager.backoffice.auth.domain.User;
 import org.softwaremanager.backoffice.manager.projects.domain.Project;
+import org.softwaremanager.backoffice.manager.tasks.domain.dto.TaskDto;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -33,11 +34,24 @@ public class Task {
     @JoinColumn(name = "project_id")
     private Project project;
 
+    public Task(TaskDto taskDto){
+        id = taskDto.getId();
+        name = taskDto.getName();
+        description = taskDto.getDescription();
+        statusCheck = taskDto.getStatusCheck();
+        priority = taskDto.getPriority();
+        planTime = taskDto.getPlanTime();
+        actualTime = taskDto.getActualTime();
+        startDate = taskDto.getStartDate();
+        finishDate = taskDto.getFinishDate();
+    }
+
     public Task(){
     }
 
     public Task(String name) {
         this.name = name;
     }
+
 
 }
