@@ -11,8 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/projects")
@@ -42,12 +42,19 @@ public class TasksByProjectsController {
     }
 
     @GetMapping("/{id}/tasks/create")
-    public String newTask(Model model){
+    public String newTask(@PathVariable("id") Long id, Model model){
+        Optional<Project> project = projectRepository.findById(id);
+        if(project.isEmpty()){
+            return "redirect:/";
+        }
+
         Task task = new Task();
+        task.setProject( project.get() );
+
         List<Project> listProjects = projectRepository.findAll();
         model.addAttribute("projects", listProjects);
         model.addAttribute("task", task);
-        return "html/task-form";
+        return "form/task-form";
     }
 
     @PostMapping("{id}/tasks/saveTask")
@@ -60,8 +67,19 @@ public class TasksByProjectsController {
     }
 
     @GetMapping("{id}/tasks/edit/{task_id}")
-    public String showEditForm(@PathVariable("id") Long id, Model model){
-        Task task = taskRepository.findById(id).get();
+    public String showEditForm(@PathVariable("id") Long id,@PathVariable("task_id") Long taskId ,Model model){
+        Optional<Project> project = projectRepository.findById(id);
+        Optional<Task> getTask = taskRepository.findById(taskId);
+
+        if(project.isEmpty() || getTask.isEmpty() ){
+            return "redirect:/";
+        } else if ( !project.get().getId().equals(
+                    getTask.get().getProject().getId())){
+            return "redirect:/";
+        }
+
+        Task task = getTask.get();
+
         System.out.println(task);
         model.addAttribute("task", task);
         model.addAttribute("projects", projectRepository.findAll());

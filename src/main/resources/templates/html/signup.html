@@ -42,17 +42,22 @@
             </div>
 
             <form th:action="@{/registration}" method="post" th:object="${user}">
+
+                <div th:if="${param.success}">
+                    <div class="alert alert-info">¡Listo! Te has registrado correctamente</div>
+                </div>
+
                 <div class="form-group">
                     <label for="">Nombre <span style="color: red;">*</span></label>
                     <div class="form-control">
-                        <input type="type" name="" id="" placeholder="Nombre de usaurio" th:field="*{firstName}" required>
+                        <input type="type" name="name" id="firstName" placeholder="Nombre de usuario" th:field="*{firstName}" required>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="">Apellido</label>
                     <div class="form-control">
-                        <input type="type" th:field="*{lastName}" name="" id="" placeholder="Apellido del usaurio">
+                        <input type="type" th:field="*{lastName}" name="lastName" id="lastName" placeholder="Apellido del usaurio">
                     </div>
                 </div>
 
