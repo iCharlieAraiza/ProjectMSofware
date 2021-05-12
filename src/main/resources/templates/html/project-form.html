@@ -40,19 +40,20 @@
 <!--- Begin - Top menu -->
 <nav class="menu-top">
     <div class="logo">
-        <a href="/">SoftTracker</a>
+        <a href="/"><img src="http://127.0.0.1:5502/img/Logo-final.png" /></a>
     </div>
     <div class="menu">
         <ul class="module">
-            <li><a th:href="@{/}" class="active">Proyectos</a></li>
-            <li><a th:href="@{/tasks}">Tareas</a></li>
-            <li><a href="http://">Bugs</a></li>
+            <li><a th:href="@{/}" href="/" class="active">Proyectos</a></li>
+            <li><a th:href="@{/tasks}" href="/tasks">Tareas</a></li>
+            <li><a th:href="@{/bugs}" href="http://">Bugs</a></li>
         </ul>
     </div>
     <div class="login-section">
         <ul>
             <li><a href="http://" class="language"><i class="fas fa-globe-americas"></i> ES</a></li>
-            <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}"> <i class="fas fa-user"></i> Cerrar sesión</a> </li>
+            <li><a th:href="@{/account}"> <i class="fas fa-user"></i> Perfil</a> </li>
+            <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}"> <i class="fas fa-sign-out-alt"></i> Cerrar sesión</a> </li>
         </ul>
     </div>
 </nav>
@@ -62,6 +63,8 @@
 
 
     <div class="container">
+        <div class="breadcrumb"> <a th:href="@{'/'}">Proyectos</a>  &gt; <span>Formulario de proyecto</span></div>
+
         <!---Begin - Header component -->
         <header>
             <div class="title">
@@ -188,7 +191,7 @@
 
 
                     <input th:if="${project.id == null}" type="submit" name="login-submit" id="login-submit"
-                           class="form-control btn btn-primary" value="Crear" />
+                           class="form-control btn btn-primary" value="Guardar" />
                     <input th:unless="${project.id == null}" type="submit" name="login-submit" id="login-submit"
                            class="form-control btn btn-primary" value="Editar" />
                 </div>

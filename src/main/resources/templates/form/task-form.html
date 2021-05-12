@@ -59,7 +59,9 @@
 <!--- Finish - Top menu -->
 
 <main>
-
+    <div class="container">
+        <div class="breadcrumb"> <a th:href="@{'/tasks'}">Tareas</a> &gt; <a th:href="@{'/projects/'+${task.project.id}+'/tasks'}">Lista de tareas</a> &gt; <span>Registro de tareas</span></div>
+    </div>
 
     <div class="container">
         <!---Begin - Header component -->
@@ -137,7 +139,7 @@
                     </div>
                 </div>
         <div class="btn-section-task">
-            <input type="submit" class="btn main-btn" value="Crear">
+            <input type="submit" class="btn main-btn" value="Guardar">
         </div>
         </form>
     </div>

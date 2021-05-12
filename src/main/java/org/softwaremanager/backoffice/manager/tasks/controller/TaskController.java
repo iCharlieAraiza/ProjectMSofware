@@ -27,13 +27,20 @@ public class TaskController {
         this.userRepository = userRepository;
     }
 
+
+    @GetMapping
+    public String showProjects(){
+        return "form/all-tasks";
+    }
+
+    /*
     @GetMapping
     public String showProjects(Model model){
         List<Task> taskList = taskRepository.findAll();
         Collections.reverse(taskList);
         model.addAttribute("taskList", taskList);
         return "html/tasks";
-    }
+    }*/
 
     @GetMapping("/create")
     public String newTask(Model model){

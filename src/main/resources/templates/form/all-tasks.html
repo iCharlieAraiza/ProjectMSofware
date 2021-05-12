@@ -38,15 +38,14 @@
 
 <main>
     <div class="container">
-        <div class="breadcrumb"><a th:href="@{'/tasks/'}">Tareas</a> &gt; <span th:text="${project.name}" ></span></div>
+
         <!---Begin - Header component -->
         <header>
             <div class="title">
                 <div class="logo"><i class="fas fa-clipboard-check"></i></div>
-                <h1 class="title">Lista de tareas de: <span class="title-tag-element" th:text="${project.name}"></span></h1>
+                <h1 class="title">Lista de tareas completa</h1>
             </div>
             <div class="action-page">
-                <a class="main-btn" th:href="@{'/projects/'+${project.id}+'/tasks/create'}" >Crear tarea</a>
             </div>
         </header>
         <!---Finish - Header component -->
@@ -56,8 +55,10 @@
         <div class="filter-component">
             <div class="form">
                 <div class="search-form">
-                    <button class="search-icon"><i class="fas fa-search"></i></button>
-                    <input type="text" placeholder="Buscar">
+                    <select name="" class="selectProject">
+                        <option value="">Proyecto 1</option>
+                    </select>
+                    <button class="search-icon" id="searchBtn"><i class="fas fa-search"></i></button>
                 </div>
                 <div class="filter-handle">
                     <input type="checkbox" name="" id="">
@@ -65,7 +66,7 @@
                 </div>
             </div>
 
-            <input type="hidden" id="idProject" th:field="${project.id}">
+            <input type="hidden" id="idProject" name="id" value="1">
 
         </div>
         <!---Finish - filter component-->
@@ -78,27 +79,6 @@
         </section>
 
     </div>
-
-    <div class="popup" id="popup-1">
-        <div class="overlay">
-
-        </div>
-        <div class="content">
-            <div class="close-btn">
-                &times;
-            </div>
-            <h2 style="margin-right: auto;"> <i class="fas fa-hourglass-half"></i> Tiempo destinado</h2>
-
-            <p>¿Cuánto tiempo tardaste en commpletar la tarea?</p>
-            <div class="form-group">
-                <input type="number" value="1" id="realTime" min="1">
-                <input type="hidden" id="referenceId">
-                <button id="updateTimeBtn" class="send-button">Enviar</button>
-            </div>
-        </div>
-    </div>
-
-
 </main>
 
 <div class="loader">
@@ -118,6 +98,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="http://127.0.0.1:5502/js/card.js"></script>
+<script src="http://127.0.0.1:5502/js/all-card.js"></script>
 </body>
 </html>

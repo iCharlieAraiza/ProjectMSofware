@@ -61,6 +61,26 @@ public class TaskRestController {
                 newTask.setStatusCheck("COMPLETED");
             }else{
                 newTask.setStatusCheck("INCOMPLETE");
+                newTask.setActualTime(null);
+            }
+            return ResponseEntity.ok( service.save(newTask) );
+        }
+    }
+
+
+    @GetMapping("/{id}/update/{time}")
+    public ResponseEntity<Task> updateTasks( @PathVariable("id") Long id, @PathVariable("time") Integer time ){
+
+        Optional<Task> task = repository.findById(id);
+
+        if(task.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }else{
+            Task newTask = task.get();
+            if(newTask.getStatusCheck().equals("INCOMPLETE")){
+                newTask.setActualTime(null);
+            }else{
+                newTask.setActualTime(time);
             }
             return ResponseEntity.ok( service.save(newTask) );
         }
