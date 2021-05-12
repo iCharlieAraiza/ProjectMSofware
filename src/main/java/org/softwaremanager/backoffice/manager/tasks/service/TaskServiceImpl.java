@@ -26,6 +26,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public Task save(Task task) {
+        return repository.save(task);
+    }
+
+    @Override
     public TaskDto save(TaskDto taskDto) {
         Task newTask = new Task(taskDto);
         newTask.setProject( projectRepository.findById( taskDto.getProject().getId() ).get() );

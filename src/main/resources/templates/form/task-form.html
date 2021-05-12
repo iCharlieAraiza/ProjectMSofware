@@ -66,13 +66,15 @@
         <header>
             <div class="title">
                 <div class="logo ml-4" style="margin-left: 1rem;"><i class="far fa-edit"></i></div>
-                <h1 class="title">Registro de tareas</h1>
+                <h1 class="title">Registro de tareas para <span class="title-tag-element" th:text="${task.project.name}"></span></h1>
             </div>
         </header>
         <!---Finish - Header component -->
         <div class="task-container-form">
-            <form action="#" th:action="@{/tasks/saveTask}" th:object="${task}" method="POST" class="row">
+            <form action="#" th:action="@{/projects/tasks/saveTask}" th:object="${task}" method="POST" class="row">
                 <input type="hidden" th:field="*{id}" th:value="${task.id}" />
+                <input type="hidden" th:field="*{project}">
+
 
                 <div class="form-container form-container-inside form-task-container">
                     <div class="title-form">
@@ -89,18 +91,6 @@
 
 
                     <div class="horizontal-form">
-                        <div class="form-group col-lg-6 horizontal">
-                            <label for="">Proyecto</label>
-                            <div class="form-control select-form">
-                                <select th:field="*{project}" disabled>
-                                    <th:block th:each="pro : ${projects}">
-                                        <option th:text="${pro.name}" th:value="${pro.id}"/>
-                                    </th:block>
-                                </select>
-                                <i class="fas fa-sort-down"></i>
-                            </div>
-                        </div>
-
 
                         <div class="form-group col-lg-6 horizontal">
                             <label for="">Fecha de entrega (plazo)</label>
@@ -121,7 +111,7 @@
                         <div class="form-group col-lg-6 horizontal">
                             <label for="">Prioridad</label>
                             <div class="form-control select-form">
-                                <select  th:field="*{priority}">
+                                <select th:field="*{priority}" th:value="*{priority}" required>
                                     <option value="LOW">Normal</option>
                                     <option value="MEDIUM">Media</option>
                                     <option value="HIGH">Alta</option>

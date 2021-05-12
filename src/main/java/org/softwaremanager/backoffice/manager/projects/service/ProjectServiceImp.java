@@ -34,7 +34,6 @@ public class ProjectServiceImp implements ProjectService{
         if(projectRepository.findById(id).isPresent()){
             Project project = projectRepository.findById(id).get();
             ProjectDto projectDto = new ProjectDto(project);
-
             List<TaskDto> taskDtoList = taskService.findTop5ByProjectOrderByIdDesc(project);
             projectDto.setTaskList( taskDtoList );
             return projectDto;

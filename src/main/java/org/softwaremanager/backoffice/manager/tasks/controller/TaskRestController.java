@@ -2,7 +2,9 @@ package org.softwaremanager.backoffice.manager.tasks.controller;
 
 import org.softwaremanager.backoffice.auth.service.UserService;
 import org.softwaremanager.backoffice.component.Paginate;
+import org.softwaremanager.backoffice.manager.tasks.domain.Task;
 import org.softwaremanager.backoffice.manager.tasks.domain.dto.TaskDto;
+import org.softwaremanager.backoffice.manager.tasks.repository.TaskRepository;
 import org.softwaremanager.backoffice.manager.tasks.service.TaskService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -10,18 +12,21 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/tasks")
 public class TaskRestController {
     final private TaskService service;
     final private UserService userService;
+    final private TaskRepository repository;
 
     final int SIZE = 15;
 
-    public TaskRestController(TaskService service, UserService userService) {
+    public TaskRestController(TaskService service, UserService userService, TaskRepository repository) {
         this.service = service;
         this.userService = userService;
+        this.repository = repository;
     }
 
     @GetMapping
@@ -42,6 +47,25 @@ public class TaskRestController {
             return ResponseEntity.ok(taskDto);
         }
     }
+
+    @GetMapping("/{id}/check")
+    public ResponseEntity<Task> checkTasks( @PathVariable("id") Long id ){
+
+        Optional<Task> task = repository.findById(id);
+
+        if(task.isEmpty()){
+            return ResponseEntity.notFound().build();
+        }else{
+            Task newTask = task.get();
+            if(newTask.getStatusCheck().equals("INCOMPLETE")){
+                newTask.setStatusCheck("COMPLETED");
+            }else{
+                newTask.setStatusCheck("INCOMPLETE");
+            }
+            return ResponseEntity.ok( service.save(newTask) );
+        }
+    }
+
 
     @GetMapping("/create")
     public ResponseEntity<TaskDto> showTask( ){

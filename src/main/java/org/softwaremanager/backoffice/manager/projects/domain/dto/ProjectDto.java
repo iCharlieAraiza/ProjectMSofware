@@ -32,7 +32,8 @@ public class ProjectDto {
         description = project.getDescription();
         startDate = project.getStartDate();
         endDate = project.getEndDate();
-        projectDetails = getProjectDetails();
+        projectStatus = project.getStatus_project();
+        projectDetails = project.getProjectDetails();
     }
 
 }

@@ -23,7 +23,7 @@ public class Project {
     private Date startDate;
     private Date endDate;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_id_project")
+    @JoinColumn(name = "fk_id_project_details")
     private ProjectDetails projectDetails;
 
     @ToString.Exclude

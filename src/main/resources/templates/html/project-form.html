@@ -71,9 +71,9 @@
         </header>
         <!---Finish - Header component -->
         <div class="">
-            <form action="#" th:action="@{/project/saveProject}" th:object="${project}"
+            <form action="#" th:action="@{/project/saveProject}"
                   method="POST" class="row">
-                <input type="hidden" th:field="*{id}" th:value="${project.id}" />
+                <input type="hidden" th:field="${project.id}" th:value="${project.id}" />
                 <div class="col-md-6">
                     <div class="form-container form-container-inside">
                         <div class="title-form">
@@ -84,7 +84,7 @@
                         <div class="form-group">
                             <label for="">Nombre del proyecto <span style="color: red;">*</span></label>
                             <div class="form-control">
-                                <input type="text" th:field="*{name}" id="name-project" placeholder="Nombre del proyecto" required>
+                                <input type="text" th:field="${project.name}" id="name-project" placeholder="Nombre del proyecto" required>
                             </div>
                         </div>
 
@@ -108,7 +108,7 @@
                             <div class="form-group col-lg-6 horizontal">
                                 <label for="">Estado del proyecto</label>
                                 <div class="form-control select-form">
-                                    <select th:field="*{status_project}">
+                                    <select th:field="${project.status_project}">
                                         <option value="ACTIVE">Activo</option>
                                         <option value="COMPLETED">Completo</option>
                                         <option value="STAND_BY">Inactivo</option>
@@ -129,7 +129,7 @@
                         <div class="form-group">
                             <label for="" style="margin-top: -5px;">Descripción</label>
                             <div class="form-control">
-                                <textarea th:field="*{description}" name="" id="" cols="30" rows="10"></textarea>
+                                <textarea th:field="${project.description}" name="" id="" cols="30" rows="10"></textarea>
                             </div>
                         </div>
                     </div>
@@ -159,7 +159,7 @@
                             <div class="form-group col-lg-6 horizontal">
                                 <label for="">Lenguaje/s de programación</label>
                                 <div class="form-control">
-                                    <input type="type" name="" id="" placeholder="Ej: PHP, Java, C++">
+                                    <input type="text" th:field="${project.projectDetails.language}" id="language" placeholder="Ej: PHP, Java, C++">
                                 </div>
                             </div>
                         </div>
@@ -169,14 +169,14 @@
                             <div class="form-group col-lg-6 horizontal">
                                 <label for="">URL del repositorio externo</label>
                                 <div class="form-control">
-                                    <input type="type" name="" id="" placeholder="Ej: GitHub, GitLab, etc.">
+                                    <input type="type" th:field="${project.projectDetails.urlRepository}" name="urlRepository" id="urlRepository" placeholder="Ej: GitHub, GitLab, etc.">
                                 </div>
                             </div>
 
                             <div class="form-group col-lg-6 horizontal">
                                 <label for="">Horas hombre (estimadas)</label>
                                 <div class="form-control">
-                                    <input type="number" min="0" value="1">
+                                    <input th:field="${project.projectDetails.planTime}" name="planTime" type="number" min="0" value="1">
                                 </div>
                             </div>
                         </div>

@@ -1,6 +1,7 @@
 package org.softwaremanager.backoffice.manager.projects.controller;
 
 import org.softwaremanager.backoffice.manager.projects.domain.Project;
+import org.softwaremanager.backoffice.manager.projects.domain.ProjectDetails;
 import org.softwaremanager.backoffice.manager.projects.repository.ProjectRepository;
 import org.softwaremanager.backoffice.manager.projects.service.ProjectServiceImp;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,8 @@ public class ProjectController {
     @GetMapping("/create")
     private String showCreateProjects(Model model){
         Project project = new Project();
+        ProjectDetails projectDetails = new ProjectDetails();
+        project.setProjectDetails(projectDetails);
         model.addAttribute("project", project);
         return "html/project-form";
     }
@@ -34,6 +37,7 @@ public class ProjectController {
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable("id") Long id, Model model){
         Project project = projectRepository.findById(id).get();
+        System.out.println( project.getProjectDetails().toString() );
         model.addAttribute("project", project);
         return "html/project-form";
     }
