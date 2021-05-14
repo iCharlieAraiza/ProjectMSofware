@@ -87,7 +87,7 @@
                         <div class="form-group">
                             <label for="">Nombre del proyecto <span style="color: red;">*</span></label>
                             <div class="form-control">
-                                <input type="text" th:field="${project.name}" id="name-project" placeholder="Nombre del proyecto" required>
+                                <input autocomplete="off" type="text" th:field="${project.name}" id="name-project" placeholder="Nombre del proyecto" required>
                             </div>
                         </div>
 
@@ -162,7 +162,7 @@
                             <div class="form-group col-lg-6 horizontal">
                                 <label for="">Lenguaje/s de programación</label>
                                 <div class="form-control">
-                                    <input type="text" th:field="${project.projectDetails.language}" id="language" placeholder="Ej: PHP, Java, C++">
+                                    <input autocomplete="off" type="text" th:field="${project.projectDetails.language}" id="language" placeholder="Ej: PHP, Java, C++">
                                 </div>
                             </div>
                         </div>
